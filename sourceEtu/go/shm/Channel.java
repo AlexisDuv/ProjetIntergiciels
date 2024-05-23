@@ -17,6 +17,8 @@ public class Channel<T> implements go.Channel<T> {
     private final Semaphore semIn = new Semaphore(0);
     private final Semaphore semOut = new Semaphore(0);
     private final Semaphore semEcr = new Semaphore(0);
+    private final Semaphore semObsIn = new Semaphore(1);
+    private final Semaphore semObsOut = new Semaphore(1);
 
     public Channel(String name) {
         this.name = name;
@@ -27,16 +29,18 @@ public class Channel<T> implements go.Channel<T> {
     
     @Override
     public void out(T v) {
+        try {
         System.out.println("out");
+        semObsOut.acquire();
         for (Observer observer : OutObservers){
             observer.update();
         }
         OutObservers.removeAll(OutObservers);
-            try {
-                semIn.release();
-                semOut.acquire();
-                content = v;
-                semEcr.release();
+        semObsOut.release();
+        semIn.release();
+        semOut.acquire();
+        content = v;
+        semEcr.release();
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -46,12 +50,14 @@ public class Channel<T> implements go.Channel<T> {
     
      @Override
      synchronized public T in() {
+        try {
         System.out.println("in");
+        semObsIn.acquire();
         for (Observer observer : InObservers){
             observer.update();
         }
         InObservers.removeAll(InObservers);
-        try {
+        semObsIn.release();
             semOut.release();
             semIn.acquire();
             semEcr.acquire();
