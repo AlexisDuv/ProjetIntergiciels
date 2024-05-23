@@ -1,7 +1,7 @@
 package go.test;
 
-import go.Direction;
 import go.*;
+import go.Direction;
 
 /* select in */
 public class TestShm11 {
@@ -39,6 +39,7 @@ public class TestShm11 {
                 @SuppressWarnings("unchecked")
                 Channel<Integer> cc = s.select();
                 v = cc.in();
+                System.out.println(v);
                 if (v != 6) quit("KO");
 
                 quit("ok");
