@@ -3,6 +3,7 @@ package go.shm;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 
 import go.Direction;
 import go.Observer;
@@ -14,6 +15,9 @@ public class Channel<T> implements go.Channel<T> {
     ArrayList<T> content;
     Set <Observer> InObservers;
     Set <Observer> OutObservers;
+
+    private final Semaphore semIn = new Semaphore(0);
+    private final Semaphore semOut = new Semaphore(1);
 
 
     public Channel(String name) {
@@ -35,21 +39,32 @@ public class Channel<T> implements go.Channel<T> {
         }
         OutObservers.removeAll(OutObservers);
             //wait(); 
-             while (dir == Direction.Out){
-                // Supprimer tous les observateurs présents
-                for (Observer observer : OutObservers){
-                    observer.update();
-                }
-                OutObservers.removeAll(OutObservers);
+            //  while (dir == Direction.Out){
+            //     // Supprimer tous les observateurs présents
+            //     for (Observer observer : OutObservers){
+            //         observer.update();
+            //     }
+            //     OutObservers.removeAll(OutObservers);
 
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            //     try {
+            //         Thread.sleep(100);
+            //     } catch (InterruptedException e) {
+            //         e.printStackTrace();
+            //     }
+            // }
+
+            try {
+            semOut.acquire();
+
             content.add(v);
             this.dir = Direction.Out;
+
+            semIn.release();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            
         }
        
     
@@ -66,25 +81,33 @@ public class Channel<T> implements go.Channel<T> {
         }
         InObservers.removeAll(InObservers);
 
-        while (dir != Direction.Out)
-            {
-                // Supprimer tous les observateurs présents
-                for (Observer observer : InObservers){
-                    observer.update();
-                }
-                InObservers.removeAll(InObservers);
 
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
 
-        T v = content.remove(0);
-        this.dir = Direction.inverse(dir);
-        return v;
-        
+        // while (dir != Direction.Out)
+        //     {
+        //         // Supprimer tous les observateurs présents
+        //         for (Observer observer : InObservers){
+        //             observer.update();
+        //         }
+        //         InObservers.removeAll(InObservers);
+
+        //         try {
+        //             Thread.sleep(100);
+        //         } catch (InterruptedException e) {
+        //             e.printStackTrace();
+        //         }
+        //     }
+
+        try {
+            semIn.acquire();
+            T v = content.remove(0);
+            this.dir = Direction.inverse(dir);
+            semOut.release();
+            return v;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getName() {

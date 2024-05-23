@@ -54,9 +54,9 @@ public class Selector implements go.Selector {
             e.printStackTrace();
         }
 
-        if (selectedChannel != null){
-            return selectedChannel;
-        }
+       // if (selectedChannel != null){
+         //   return selectedChannel;
+        //}
 
 
         //
