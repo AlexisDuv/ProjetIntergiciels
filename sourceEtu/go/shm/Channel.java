@@ -11,7 +11,6 @@ import go.Observer;
 public class Channel<T> implements go.Channel<T> {
 
     String name;
-    Direction dir;
     ArrayList<T> content;
     Set <Observer> InObservers;
     Set <Observer> OutObservers;
@@ -23,7 +22,6 @@ public class Channel<T> implements go.Channel<T> {
     public Channel(String name) {
         // TODO
         this.name = name;
-        this.dir = null;
         this.content = new ArrayList<T>();
         this.InObservers = new HashSet<Observer>();
         this.OutObservers = new HashSet<Observer>();
@@ -57,7 +55,6 @@ public class Channel<T> implements go.Channel<T> {
             semOut.acquire();
 
             content.add(v);
-            this.dir = Direction.Out;
 
             semIn.release();
             }
@@ -71,10 +68,7 @@ public class Channel<T> implements go.Channel<T> {
      synchronized public T in() {
         System.out.println("in");
         // TODO
-        if (dir == null) {
-            dir = Direction.In;
-            
-        }
+   
 
         for (Observer observer : InObservers){
             observer.update();
@@ -101,7 +95,6 @@ public class Channel<T> implements go.Channel<T> {
         try {
             semIn.acquire();
             T v = content.remove(0);
-            this.dir = Direction.inverse(dir);
             semOut.release();
             return v;
         } catch (InterruptedException e) {
@@ -117,10 +110,8 @@ public class Channel<T> implements go.Channel<T> {
 
     public void observe(Direction dir, Observer observer) {
         // TODO
-        if (this.dir == dir){
-            observer.update();
-        }
-        else if (dir == Direction.In){
+
+        if (dir == Direction.In){
             InObservers.add(observer);
         }
         else{
