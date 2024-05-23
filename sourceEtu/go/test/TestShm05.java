@@ -54,6 +54,7 @@ public class TestShm05 {
 
         
          new Thread(() -> {
+            try { Thread.sleep(100);  } catch (InterruptedException e) { }
                  int v = c.in();
                 if (v != 4) quit("KO");
      }).start();

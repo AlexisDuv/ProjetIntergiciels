@@ -11,7 +11,7 @@ import go.Observer;
 public class Channel<T> implements go.Channel<T> {
 
     String name;
-    ArrayList<T> content;
+    T content;
     Set <Observer> InObservers;
     Set <Observer> OutObservers;
 
@@ -22,7 +22,7 @@ public class Channel<T> implements go.Channel<T> {
     public Channel(String name) {
         // TODO
         this.name = name;
-        this.content = new ArrayList<T>();
+        this.content = null;
         this.InObservers = new HashSet<Observer>();
         this.OutObservers = new HashSet<Observer>();
     }
@@ -54,7 +54,7 @@ public class Channel<T> implements go.Channel<T> {
             try {
             semOut.acquire();
 
-            content.add(v);
+            content = v;
 
             semIn.release();
             }
@@ -94,7 +94,8 @@ public class Channel<T> implements go.Channel<T> {
 
         try {
             semIn.acquire();
-            T v = content.remove(0);
+            T v = content;
+           // content = null;
             semOut.release();
             return v;
         } catch (InterruptedException e) {
@@ -111,12 +112,25 @@ public class Channel<T> implements go.Channel<T> {
     public void observe(Direction dir, Observer observer) {
         // TODO
 
-        if (dir == Direction.In){
-            InObservers.add(observer);
+        // Regarde si la semaphore in est prise
+        if (semIn.availablePermits() == 0 && dir == Direction.In){
+            observer.update();
         }
-        else{
-            OutObservers.add(observer);
+        // Regarde si la semaphore out est prise
+        else if (semOut.availablePermits() == 0 && dir == Direction.Out){
+            observer.update();
         }
+        // Ajoute l'observer
+        else {
+            if (dir == Direction.In){
+                InObservers.add(observer);
+        }
+            else{
+                OutObservers.add(observer);
+        } 
+        }
+
+       
 }
         
 }
