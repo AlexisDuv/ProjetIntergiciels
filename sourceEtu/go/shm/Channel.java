@@ -87,11 +87,25 @@ public class Channel<T> implements go.Channel<T> {
         // Ajoute l'observer
         else {
             if (dir == Direction.In){
-                InObservers.add(observer);
-        }
+                try {
+                    semObsIn.acquire();
+                    InObservers.add(observer);
+                    semObsIn.release();
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }  
+            }
             else{
-                OutObservers.add(observer);
-        } 
+                try {
+                    semObsOut.acquire();
+                    OutObservers.add(observer);
+                    semObsOut.release();
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                } ;
+            } 
         }
 
        
