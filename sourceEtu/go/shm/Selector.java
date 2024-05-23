@@ -20,7 +20,7 @@ public class Selector implements go.Selector {
 
     public Channel select() {
 
-            class ObserverIn implements Observer{
+            class ObserverSelect implements Observer{
                 Channel observedChannel;
 
                 public void setObservedChannel(Channel c){
@@ -36,15 +36,13 @@ public class Selector implements go.Selector {
                         e.printStackTrace();
                     }
                 }
-
-
             }
             
             //Ajout observers
             for (Map.Entry<Channel, Direction> entry : this.channels.entrySet()) {
                 Channel channel = entry.getKey();
                 Direction direction = entry.getValue();
-                ObserverIn obs = new ObserverIn();
+                ObserverSelect obs = new ObserverSelect();
                 obs.setObservedChannel(channel);
                 channel.observe(Direction.inverse(direction), obs);
             }
