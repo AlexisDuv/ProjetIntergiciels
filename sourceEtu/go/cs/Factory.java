@@ -2,19 +2,41 @@ package go.cs;
 
 import go.Direction;
 import java.util.Set;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Factory implements go.Factory {
 
+
+private ChannelManager manager;
+    public Factory()  {
+            
+     
+
+    }
+
     /** Création ou accès à un canal existant.
      * Côté serveur, le canal est créé au premier appel avec un nom donné ;
      * les appels suivants avec le même nom donneront accès au même canal.
      */
-    public <T> go.Channel<T> newChannel(String name) {
-        // TODO
-        return null;
+    public <T> go.Channel<T> newChannel(String name){
+
+        try {   
+                this.manager = (ChannelManager) Naming.lookup("rmi://localhost:1099/MesChannels");
+                manager.createChannel(name);
+       
+                return manager.getChannel(name);
+
+        } catch (RemoteException | NotBoundException | MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+            
     }
     
     /** Spécifie quels sont les canaux écoutés et la direction pour chacun. */
