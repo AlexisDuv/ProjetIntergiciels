@@ -2,6 +2,10 @@ package go.cs;
 
 import go.Direction;
 import go.Observer;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 public class Channel<T> implements go.Channel<T> {
 
@@ -33,11 +37,27 @@ public class Channel<T> implements go.Channel<T> {
         return null;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
     public void observe(Direction direction, Observer observer) {
-        // TODO
+        ClientCallback cb = new ClientCallback(observer);
+        Api api;
+        try {
+            api = (Api) Naming.lookup("rmi://localhost:1099/api");
+            try {
+                api.wakeMeUp(name, direction, cb);
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } catch (MalformedURLException | RemoteException | NotBoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
     }
 }

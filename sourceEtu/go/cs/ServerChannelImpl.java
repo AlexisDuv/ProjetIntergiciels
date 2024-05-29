@@ -1,8 +1,8 @@
 package go.cs;
+import go.Direction;
+import go.shm.Channel;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-
-import go.shm.Channel;
 
 public class ServerChannelImpl extends UnicastRemoteObject implements ServerChannel{
 
@@ -20,6 +20,11 @@ public class ServerChannelImpl extends UnicastRemoteObject implements ServerChan
 
     public void out(Object v)throws RemoteException{
         shmChannel.out(v);  
+    }
+
+    @Override
+    public void observe(Direction dir, Callback cb) throws RemoteException {
+        shmChannel.observe(dir,);
     }
 
 

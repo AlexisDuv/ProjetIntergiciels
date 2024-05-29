@@ -4,6 +4,8 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
+import go.Direction;
+
 public class ApiImpl extends java.rmi.server.UnicastRemoteObject implements Api{
 
     Map<String, ServerChannel> channels;
@@ -32,6 +34,19 @@ public class ApiImpl extends java.rmi.server.UnicastRemoteObject implements Api{
         }
        
 
+    }
+
+    @Override
+    public void wakeMeUp(String name, Direction direction, ClientCallback cb) throws RemoteException {
+        ServerChannel channel = channels.get(name);
+        channel.observe(direction,() -> {
+            try {
+                cb.wakeUp();
+            }
+            catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }
