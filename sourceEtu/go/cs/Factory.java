@@ -10,33 +10,37 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
 public class Factory implements go.Factory {
 
+    Api api;
 
-private ChannelManager manager;
     public Factory()  {
-            
+        try {
+            api = (Api) Naming.lookup("rmi://localhost:1099/api");
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (RemoteException | MalformedURLException e) {
+            e.printStackTrace();
+        }
      
-
     }
 
     /** Création ou accès à un canal existant.
      * Côté serveur, le canal est créé au premier appel avec un nom donné ;
      * les appels suivants avec le même nom donneront accès au même canal.
+     * @throws RemoteException 
      */
     public <T> go.Channel<T> newChannel(String name){
-
-        try {   
-                this.manager = (ChannelManager) Naming.lookup("rmi://localhost:1099/MesChannels");
-                manager.createChannel(name);
-       
-                return manager.getChannel(name);
-
-        } catch (RemoteException | NotBoundException | MalformedURLException e) {
+        try {
+            ServerChannel sc = api.newChannel(name);
+            System.out.println("Channel created" + sc);
+        return new Channel<T>(name, sc);
+        }catch (RemoteException e) {
             e.printStackTrace();
             return null;
         }
-            
+        
     }
     
     /** Spécifie quels sont les canaux écoutés et la direction pour chacun. */

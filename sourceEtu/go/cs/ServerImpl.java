@@ -18,10 +18,9 @@ public class ServerImpl {
                     System.out.println("A registry is already running, proceeding...");
                 }
         
-                //  Création de l'objet CanalManager qui va gérer les différents canaux,
-                //  et enregistrement dans le serveur de nom
-                ChannelManager channelManager= new ChannelManagerImpl();
-                LocateRegistry.getRegistry(1099).bind("MesChannels", channelManager);
+
+               ApiImpl api = new ApiImpl();
+               LocateRegistry.getRegistry(1099).bind("api", api);
                 
         
                 // Service prêt : attente d'appels
