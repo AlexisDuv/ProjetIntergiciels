@@ -16,6 +16,10 @@ public class ApiImpl extends java.rmi.server.UnicastRemoteObject implements Api{
     @Override
     public ServerChannel newChannel(String name) {
 
+        if (channels.containsKey(name)) {
+            return channels.get(name);
+        }
+
         try {
             ServerChannel newChannel = new ServerChannelImpl(name);
             channels.put(name, newChannel);
