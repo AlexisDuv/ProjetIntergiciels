@@ -17,6 +17,9 @@ public class Factory implements go.Factory {
 
     public Factory()  {
         try {
+
+
+           // Obtenir une référence à l'interface du serveur
             api = (Api) Naming.lookup("rmi://localhost:1099/api");
         } catch (NotBoundException e) {
             e.printStackTrace();
@@ -34,7 +37,6 @@ public class Factory implements go.Factory {
     public <T> go.Channel<T> newChannel(String name){
         try {
             ServerChannel sc = api.newChannel(name);
-            System.out.println("Channel created" + sc);
         return new Channel<T>(name, sc);
         }catch (RemoteException e) {
             e.printStackTrace();

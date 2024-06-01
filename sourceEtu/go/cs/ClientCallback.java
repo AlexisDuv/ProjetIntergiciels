@@ -1,13 +1,18 @@
 package go.cs;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 import go.Observer;
 
-public class ClientCallback implements Callback {
+public class ClientCallback extends UnicastRemoteObject implements Callback {
 
     Observer observer;
+
+    public ClientCallback() throws RemoteException {
+}
     
-    public ClientCallback(Observer observer) {
+    public ClientCallback(Observer observer) throws RemoteException{
         this.observer = observer;
     }
 

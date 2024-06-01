@@ -37,7 +37,7 @@ public class ApiImpl extends java.rmi.server.UnicastRemoteObject implements Api{
     }
 
     @Override
-    public void wakeMeUp(String name, Direction direction, ClientCallback cb) throws RemoteException {
+    public void wakeMeUp(String name, Direction direction, Callback cb) throws RemoteException {
         ServerChannel channel = channels.get(name);
         channel.observe(direction,() -> {
             try {

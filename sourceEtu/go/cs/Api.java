@@ -8,6 +8,6 @@ public interface Api extends Remote{
 
     ServerChannel newChannel(String name) throws RemoteException;
 
-    void wakeMeUp(String name,Direction direction, ClientCallback cb) throws RemoteException;
+    void wakeMeUp(String name, Direction direction, Callback cb) throws RemoteException;
 
 }
