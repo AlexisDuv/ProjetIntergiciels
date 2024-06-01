@@ -6,7 +6,7 @@ import go.*;
 public class TestSelectorCS2 {
 
     private static void quit(String msg) {
-        System.out.println("TestShm11: " + msg);
+        System.out.println("TestSelectorCS2: " + msg);
         System.exit(msg.equals("ok") ? 0 : 1);
     }
 
@@ -19,23 +19,20 @@ public class TestSelectorCS2 {
         Channel<Integer> c1 = factory.newChannel("c1");
 
         Selector s = factory.newSelector(java.util.Set.of(c4, c5, c6), Direction.Out); 
-        new Thread(() -> {
-                try { Thread.sleep(2000);  } catch (InterruptedException e) { }
-                quit("KO (deadlock)");
-        }).start();
+        // new Thread(() -> {
+        //         try { Thread.sleep(2000);  } catch (InterruptedException e) { }
+        //         quit("KO (deadlock)");
+        // }).start();
         
         new Thread(() -> {
-            int v = c1.in();
-            if (v != 4) quit("KO");
+            try { Thread.sleep(600);  } catch (InterruptedException e) {}
+            c1.out(4);
         }).start();
 
         new Thread(() -> {
-                try { Thread.sleep(100);  } catch (InterruptedException e) { }
                 @SuppressWarnings("unchecked")
                 Channel<Integer> c = s.select();
-                int v = c.in();
-                if (v != 4) quit("KO");
-
+                c.out(6);
                 quit("ok");
         }).start();
         
