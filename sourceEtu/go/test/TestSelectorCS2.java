@@ -33,6 +33,7 @@ public class TestSelectorCS2 {
                 @SuppressWarnings("unchecked")
                 Channel<Integer> c = s.select();
                 c.out(6);
+                try { Thread.sleep(9000);} catch (InterruptedException e) {}
                 quit("ok");
         }).start();
         

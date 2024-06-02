@@ -39,6 +39,7 @@ public class TestSelectorCS {
                 int v = c.in();
                 System.out.println("2v = " + v);
                 if (v != 4) quit("KO2");
+                try { Thread.sleep(9000);} catch (InterruptedException e) {}
                 quit("ok");
         }).start();
         
