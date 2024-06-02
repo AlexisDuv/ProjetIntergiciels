@@ -7,7 +7,7 @@ import go.Observer;
 
 
 /** (out;out) | in | in */
-public class TestObservateurCS2 {
+public class TestObservateurCSa {
     
 
     private static void quit(String msg) {
@@ -32,9 +32,9 @@ public class TestObservateurCS2 {
             quit("KO (deadlock)");
     }).start();
 
-    c.observe(Direction.In, new TestObservation());
-    c.out(4);
-    quit("ok");
+    c.observe(Direction.Out, new TestObservation());
+    int v = c.in();
+    quit(v == 4 ? "ok" : "KO");
 
                    
     }
