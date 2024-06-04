@@ -3,7 +3,7 @@ package go.test;
 import go.*;
 
 /* select in */
-public class TestSelectorCS {
+public class TestSelectorCSa {
 
     private static void quit(String msg) {
         System.out.println("TestSelectorCS: " + msg);
