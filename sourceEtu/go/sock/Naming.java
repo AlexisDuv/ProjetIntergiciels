@@ -7,15 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Naming extends UnicastRemoteObject {
+public class Naming extends UnicastRemoteObject implements Dns{
 
-    protected Naming() throws RemoteException {
-        super();
-        }
+   
 
-    // TODO
     Map<String, InfosConnection> connections = new HashMap<String, InfosConnection>();
 
+ protected Naming() throws RemoteException {
+        super();
+        this.connections = new HashMap<String, InfosConnection>();
+        }
 
     public boolean exists(String name) {
         return connections.containsKey(name);
@@ -38,9 +39,7 @@ public class Naming extends UnicastRemoteObject {
                 }
         
                 
-                Naming naming = new Naming();
-
-               LocateRegistry.getRegistry(1099).bind("dns", naming);
+               LocateRegistry.getRegistry(1099).bind("dns", new go.sock.Naming());
                 
         
                 // Service prêt : attente d'appels

@@ -9,29 +9,22 @@ import java.net.Socket;
 
 public class ChannelSlave<T> implements go.Channel<T> {
 
-    ObjectInputStream in;
-    ObjectOutputStream out;
-    String name;
+String address;
+int port;    
+String name;
 
     public ChannelSlave(String name, String address, int port) {
         this.name = name;
-        connect(address, port);
-    }
-
-    private void connect(String address, int port) {
-        try (Socket socket = new Socket(address, port)) {
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        this.address = address;
+        this.port = port;
     }
 
     @Override
     public void out(T v) {
-        try {
+        try (Socket socket = new Socket(address, port)) {
+           ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             out.writeObject(new Data<T>("out", v));
+            out.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -40,9 +33,14 @@ public class ChannelSlave<T> implements go.Channel<T> {
 
     @Override
     public T in() {
-        try {
+        System.out.println(address + " " + port);
+        try (Socket socket = new Socket(address, port)) {
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             out.writeObject(new Data<T>("in", null));
+            out.flush();
             return (T) in.readObject();
+
         } catch (ClassNotFoundException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -1,6 +1,6 @@
 package go.sock;
 
-public class InfosConnection {
+public class InfosConnection implements java.io.Serializable{
 
     public InfosConnection(String address, int port) {
         this.address = address;

@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class Factory implements go.Factory {
 
-    Naming dns;
+    Dns dns;
     Random random = new Random();
     int min = 1200;
     int max = 2000;
@@ -20,7 +20,8 @@ public class Factory implements go.Factory {
     public Factory()  {
         try {
            // Obtenir une référence à l'interface du serveur
-            dns = (Naming) java.rmi.Naming.lookup("rmi://localhost:1099/dns");
+            dns =  (Dns) java.rmi.Naming.lookup("rmi://localhost:1099/dns");
+
         } catch (NotBoundException e) {
             e.printStackTrace();
         } catch (RemoteException | MalformedURLException e) {
@@ -30,15 +31,25 @@ public class Factory implements go.Factory {
 
     @Override
     public <T> Channel<T> newChannel(String name) {
-        if (dns.exists(name)){
-            InfosConnection infosMaster = dns.get(name);
-            ChannelSlave<T> cs = new ChannelSlave<>(name,infosMaster.address,infosMaster.port);
-            return cs;
-        }
-        else{
-            ChannelMaster<T> cm = new ChannelMaster<>(name);
-            dns.add(cm.getName(), new InfosConnection("localhost", random.nextInt(max - min + 1) + min));
-            return cm;
+        try {
+            System.out.println( dns.exists(name));
+            if (dns.exists(name)){
+                InfosConnection infosMaster = dns.get(name);
+                ChannelSlave<T> cs = new ChannelSlave<>(name,infosMaster.address,infosMaster.port);
+                return cs;
+            }
+            else{
+                
+                dns.add(name, new InfosConnection("1234", random.nextInt(max - min + 1) + min));
+
+                ChannelMaster<T> cm = new ChannelMaster<>(name);
+            
+                return cm;
+            }
+        } catch (RemoteException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
         }
     }
 
