@@ -35,6 +35,7 @@ String name;
     public T in() {
         System.out.println(address + " " + port);
         try (Socket socket = new Socket(address, port)) {
+            System.out.println("connection successful");
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             out.writeObject(new Data<T>("in", null));

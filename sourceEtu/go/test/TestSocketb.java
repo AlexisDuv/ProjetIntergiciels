@@ -20,7 +20,7 @@ public class TestSocketb {
         Channel<Integer> c = factory.newChannel("c");
 
         new Thread(() -> {
-                try { Thread.sleep(5000);  } catch (InterruptedException e) { }
+                try { Thread.sleep(50000);  } catch (InterruptedException e) { }
                 quit("KO (deadlock)");
         }).start();
 

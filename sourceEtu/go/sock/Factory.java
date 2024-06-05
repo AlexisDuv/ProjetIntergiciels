@@ -3,7 +3,10 @@ package go.sock;
 import go.Channel;
 import go.Direction;
 import go.Selector;
+
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -40,13 +43,17 @@ public class Factory implements go.Factory {
             }
             else{
                 
-                dns.add(name, new InfosConnection("1234", random.nextInt(max - min + 1) + min));
+                dns.add(name, new InfosConnection(InetAddress.getLocalHost().toString(), 1234));
 
                 ChannelMaster<T> cm = new ChannelMaster<>(name);
             
                 return cm;
             }
         } catch (RemoteException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } catch (UnknownHostException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
