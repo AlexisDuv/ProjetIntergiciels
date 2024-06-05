@@ -1,12 +1,17 @@
 package go.sock;
 
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import go.cs.ApiImpl;
 
-public class Naming {
+public class Naming extends UnicastRemoteObject {
+
+    protected Naming() throws RemoteException {
+        super();
+        }
 
     // TODO
     Map<String, InfosConnection> connections = new HashMap<String, InfosConnection>();
@@ -32,9 +37,10 @@ public class Naming {
                     System.out.println("A registry is already running, proceeding...");
                 }
         
+                
+                Naming naming = new Naming();
 
-               ApiImpl api = new ApiImpl();
-               LocateRegistry.getRegistry(1099).bind("api", api);
+               LocateRegistry.getRegistry(1099).bind("dns", naming);
                 
         
                 // Service prêt : attente d'appels

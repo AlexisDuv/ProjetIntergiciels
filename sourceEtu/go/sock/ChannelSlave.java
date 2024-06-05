@@ -13,7 +13,7 @@ public class ChannelSlave<T> implements go.Channel<T> {
     ObjectOutputStream out;
     String name;
 
-    public ChannelSlave(String name, String address, String port) {
+    public ChannelSlave(String name, String address, int port) {
         this.name = name;
         connect(address, port);
     }

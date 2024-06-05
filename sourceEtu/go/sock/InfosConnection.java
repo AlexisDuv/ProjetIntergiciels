@@ -8,5 +8,5 @@ public class InfosConnection {
     }
 
     public String address;
-    public String port;
+    public int port;
 }
