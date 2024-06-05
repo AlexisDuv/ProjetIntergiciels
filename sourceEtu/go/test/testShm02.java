@@ -3,6 +3,7 @@ package go.test;
 import go.Channel;
 import go.Factory;
 
+/*6 outs */
 public class testShm02 {
     private static void quit(String msg) {
         System.out.println("TestShm02: " + msg);

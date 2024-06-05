@@ -6,7 +6,7 @@ import go.Factory;
 import go.Observer;
 
 
-/** (out;out) | in | in */
+/*test observateur 1 */
 public class TestShm04 {
     
 

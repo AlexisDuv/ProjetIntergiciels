@@ -37,6 +37,7 @@ public class Channel<T> implements go.Channel<T> {
         }
         OutObservers.removeAll(OutObservers);
         semObsOut.release();
+
         semIn.release();
         semOut.acquire();
         content = v;
@@ -58,11 +59,13 @@ public class Channel<T> implements go.Channel<T> {
         }
         InObservers.removeAll(InObservers);
         semObsIn.release();
-            semOut.release();
-            semIn.acquire();
-            semEcr.acquire();
-            T v = content;
-            return v;
+
+        semOut.release();
+        semIn.acquire();
+        semEcr.acquire();
+        T v = content;
+        return v;
+        
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

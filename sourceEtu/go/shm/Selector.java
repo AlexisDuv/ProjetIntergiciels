@@ -14,7 +14,6 @@ public class Selector implements go.Selector {
     private final Semaphore sem = new Semaphore(0);
 
     public Selector(Map<Channel, Direction> channels) {
-        // TODO
         this.channels = channels; 
     }
 

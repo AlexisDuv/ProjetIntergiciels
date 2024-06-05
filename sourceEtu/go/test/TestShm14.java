@@ -2,7 +2,7 @@ package go.test;
 
 import go.*;
 
-/* select mixte */
+/* double selector */
 public class TestShm14 {
 
     private static void quit(String msg) {

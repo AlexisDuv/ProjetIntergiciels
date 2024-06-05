@@ -5,8 +5,7 @@ import go.Direction;
 import go.Factory;
 import go.Observer;
 
-
-/** (out;out) | in | in */
+/* test observers 3 in observers 2 out obsevers  */
 public class TestShm06 {
     
 
